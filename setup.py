@@ -13,8 +13,8 @@ setup(
     name='service_person_stamdata_udvidet',
     version='0.1.0',
     description='',
-    author='Steffen Park',
-    author_email='steffen@magenta.dk',
+    author='Magenta ApS',
+    author_email='info@magenta.dk',
     license="MPL 2.0",
     packages=find_packages(),
     package_data={
