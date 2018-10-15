@@ -11,7 +11,7 @@ from setuptools import find_packages
 
 setup(
     name='service_person_stamdata_udvidet',
-    version='0.1.1',
+    version='0.1.2',
     description='',
     author='Magenta ApS',
     author_email='info@magenta.dk',
@@ -25,5 +25,11 @@ setup(
         "Jinja2>=2.10",
         "requests>=2.18.4",
         "xmltodict>=0.11.0",
-    ]
+    ],
+    classifiers=[
+        "Development Status :: 3 - Alpha",
+        "Topic :: Utilities",
+        "License :: OSI Approved :: MPL License",
+    ],
+    url="https://github.com/magenta-aps/service_person_stamdata_udvidet",
 )
