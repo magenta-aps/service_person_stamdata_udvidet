@@ -11,7 +11,7 @@ from setuptools import find_packages
 
 setup(
     name='service_person_stamdata_udvidet',
-    version='0.1.1',
+    version='0.1.2',
     description='',
     author='Magenta ApS',
     author_email='info@magenta.dk',
