@@ -11,12 +11,12 @@ from setuptools import find_packages
 
 setup(
     name='service_person_stamdata_udvidet',
-    version='0.1.2',
+    version='0.1.3',
     description='',
     author='Magenta ApS',
     author_email='info@magenta.dk',
     license="MPL 2.0",
-    packages=find_packages(),
+    packages=find_packages(exclude=['tests']),
     package_data={
         '': ["*.txt", "*.xml"]
     },
