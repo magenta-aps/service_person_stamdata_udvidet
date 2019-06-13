@@ -17,9 +17,7 @@ __author__ = "Heini Leander Ovason"
 
 
 # Service
-service_url = (
-    "https://prod.serviceplatformen.dk/service/CPR/PersonBaseDataExtended/4"
-)
+service_url = "https://prod.serviceplatformen.dk/service/CPR/PersonBaseDataExtended/4"
 
 
 def get_citizen(service_uuids, certificate, cprnr, service_url=service_url):
@@ -43,14 +41,12 @@ def get_citizen(service_uuids, certificate, cprnr, service_url=service_url):
         )
 
         soap_envelope = construct_envelope_SF1520(
-            template=soap_envelope_template,
-            service_uuids=service_uuids,
-            cprnr=cprnr
+            template=soap_envelope_template, service_uuids=service_uuids, cprnr=cprnr
         )
         response = call_cpr_person_lookup_request(
             soap_envelope=soap_envelope,
             certificate=certificate,
-            service_url=service_url
+            service_url=service_url,
         )
         if response.status_code == 200:
             citizen_dict = parse_cpr_person_lookup_xml_to_dict(
@@ -59,7 +55,7 @@ def get_citizen(service_uuids, certificate, cprnr, service_url=service_url):
             return citizen_dict
         else:
             response.raise_for_status()
-            return {'Error': 'Something went wrong'}
+            return {"Error": "Something went wrong"}
 
 
 def call_cpr_person_lookup_request(soap_envelope, certificate, service_url):
@@ -74,9 +70,7 @@ def call_cpr_person_lookup_request(soap_envelope, certificate, service_url):
     :rtype: str"""
 
     response = http_post(
-        endpoint=service_url,
-        soap_envelope=soap_envelope,
-        certificate=certificate
+        endpoint=service_url, soap_envelope=soap_envelope, certificate=certificate
     )
 
     return response
@@ -89,56 +83,58 @@ def parse_cpr_person_lookup_xml_to_dict(soap_response_xml):
     : return: Dictionary representation of a citizen
     : rtype: dict"""
 
-    xml_to_dict = xmltodict.parse(soap_response_xml)
-
-    root = xml_to_dict['soap:Envelope']['soap:Body'][
-        'ns5:PersonLookupResponse']
+    namespaces = {
+        "http://serviceplatformen.dk/xml/schemas/cpr/PNR/1/": None,
+        "http://serviceplatformen.dk/xml/schemas/InvocationContext/1/": None,
+        "http://serviceplatformen.dk/xml/schemas/AuthorityContext/1/": None,
+        "http://serviceplatformen.dk/xml/schemas/CallContext/1/": None,
+        "http://serviceplatformen.dk/xml/wsdl/soap11/CPR/PersonBaseDataExtended/4/": None,
+        "http://schemas.xmlsoap.org/soap/envelope/": None,
+    }
+    xml_to_dict = xmltodict.parse(
+        soap_response_xml, process_namespaces=True, namespaces=namespaces
+    )
+    root = xml_to_dict["Envelope"]["Body"]["PersonLookupResponse"]
 
     citizen_dict = {}
 
-    person_data = root['ns5:persondata']
+    person_data = root["persondata"]
     for k, v in person_data.items():
-        key = k[4:]
+        key = k
         citizen_dict[key] = v
 
-    name = root["ns5:persondata"]['ns5:navn']
+    name = root["persondata"]["navn"]
     for k, v in name.items():
-        key = k[4:]
+        key = k
         citizen_dict[key] = v
 
-    address = root['ns5:adresse']['ns5:aktuelAdresse']
+    address = root["adresse"]["aktuelAdresse"]
     if not address:
         address = {}
     for k, v in address.items():
-        key = k[4:]
+        key = k
         citizen_dict[key] = v
 
     try:
-        not_living_in_dk = root['ns5:adresse']['ns5:udrejseoplysninger']  # noqa F841
-        citizen_dict['udrejst'] = True
+        not_living_in_dk = root["adresse"]["udrejseoplysninger"]  # noqa F841
+        citizen_dict["udrejst"] = True
     except KeyError:
-        citizen_dict['udrejst'] = False
+        citizen_dict["udrejst"] = False
 
-    relations = root['ns5:relationer']
-    citizen_dict['relationer'] = []
+    relations = root["relationer"]
+    citizen_dict["relationer"] = []
     for k, v in relations.items():
         # NOTE: v is a dict if k is:
-        # 'ns5:mor', 'ns5:far', or 'ns5:aegtefaelle'.
+        # 'mor', 'far', or 'aegtefaelle'.
         if isinstance(v, dict):
-            citizen_dict['relationer'].append(
-                {
-                    'relation': k[4:],
-                    'cprnr': v.get('ns5:personnummer')
-                }
+            citizen_dict["relationer"].append(
+                {"relation": k, "cprnr": v.get("personnummer")}
             )
-        # NOTE: v is a list of dicts if k is 'ns5:barn'.
+        # NOTE: v is a list of dicts if k is 'barn'.
         if isinstance(v, list):
             for child in v:
-                citizen_dict['relationer'].append(
-                    {
-                        'relation': k[4:],
-                        'cprnr': child.get('ns5:personnummer')
-                    }
+                citizen_dict["relationer"].append(
+                    {"relation": k, "cprnr": child.get("personnummer")}
                 )
 
     return citizen_dict
