@@ -49,7 +49,8 @@ def get_citizen(service_uuids, certificate, cprnr, service_url=service_url):
         )
         response = call_cpr_person_lookup_request(
             soap_envelope=soap_envelope,
-            certificate=certificate
+            certificate=certificate,
+            service_url=service_url
         )
         if response.status_code == 200:
             citizen_dict = parse_cpr_person_lookup_xml_to_dict(
@@ -61,12 +62,14 @@ def get_citizen(service_uuids, certificate, cprnr, service_url=service_url):
             return {'Error': 'Something went wrong'}
 
 
-def call_cpr_person_lookup_request(soap_envelope, certificate):
+def call_cpr_person_lookup_request(soap_envelope, certificate, service_url):
     """Performs a web service call to 'Udvidet Person Stam Data(lokal)'.
     : param soap_envelope: SOAP envelope
     : param certificate: Path to certificate
+    : param service_url: url endpoint for service
     : type soap_envelope: str
-    : type soap_envelope: str
+    : type certificate: str
+    : type service_url: str
     :return: Complete serviceplatform xml representation of a citizen
     :rtype: str"""
 
