@@ -100,20 +100,17 @@ def parse_cpr_person_lookup_xml_to_dict(soap_response_xml):
 
     person_data = root["persondata"]
     for k, v in person_data.items():
-        key = k
-        citizen_dict[key] = v
+        citizen_dict[k] = v
 
     name = root["persondata"]["navn"]
     for k, v in name.items():
-        key = k
-        citizen_dict[key] = v
+        citizen_dict[k] = v
 
     address = root["adresse"]["aktuelAdresse"]
     if not address:
         address = {}
     for k, v in address.items():
-        key = k
-        citizen_dict[key] = v
+        citizen_dict[k] = v
 
     try:
         not_living_in_dk = root["adresse"]["udrejseoplysninger"]  # noqa F841
