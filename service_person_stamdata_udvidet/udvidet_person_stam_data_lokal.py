@@ -18,12 +18,11 @@ __author__ = "Heini Leander Ovason"
 
 # Service
 service_url = (
-        "https://prod.serviceplatformen.dk/service/CPRInformation/"
-        "CPRInformation/1"
-    )
+    "https://prod.serviceplatformen.dk/service/CPR/PersonBaseDataExtended/4"
+)
 
 
-def get_citizen(service_uuids, certificate, cprnr):
+def get_citizen(service_uuids, certificate, cprnr, service_url=service_url):
     """The function returnes a citizen dict from the
     'SF1520 - Udvidet person stamdata (lokal)' service.
     It serves as a facade to simplify input validation, and interaction
@@ -90,21 +89,21 @@ def parse_cpr_person_lookup_xml_to_dict(soap_response_xml):
     xml_to_dict = xmltodict.parse(soap_response_xml)
 
     root = xml_to_dict['soap:Envelope']['soap:Body'][
-        'ns4:callCPRPersonLookupResponse']
+        'ns5:PersonLookupResponse']
 
     citizen_dict = {}
 
-    person_data = root['ns4:personData']
+    person_data = root['ns5:persondata']
     for k, v in person_data.items():
         key = k[4:]
         citizen_dict[key] = v
 
-    name = root['ns4:navn']
+    name = root["ns5:persondata"]['ns5:navn']
     for k, v in name.items():
         key = k[4:]
         citizen_dict[key] = v
 
-    address = root['ns4:adresse']['ns4:aktuelAdresse']
+    address = root['ns5:adresse']['ns5:aktuelAdresse']
     if not address:
         address = {}
     for k, v in address.items():
@@ -112,12 +111,12 @@ def parse_cpr_person_lookup_xml_to_dict(soap_response_xml):
         citizen_dict[key] = v
 
     try:
-        not_living_in_dk = root['ns4:adresse']['ns4:udrejseoplysninger']  # noqa F841
+        not_living_in_dk = root['ns5:adresse']['ns5:udrejseoplysninger']  # noqa F841
         citizen_dict['udrejst'] = True
-    except KeyError as key_error:
+    except KeyError:
         citizen_dict['udrejst'] = False
 
-    relations = root['ns4:relationer']
+    relations = root['ns5:relationer']
     citizen_dict['relationer'] = []
     for k, v in relations.items():
         # NOTE: v is a dict if k is:
@@ -126,7 +125,7 @@ def parse_cpr_person_lookup_xml_to_dict(soap_response_xml):
             citizen_dict['relationer'].append(
                 {
                     'relation': k[4:],
-                    'cprnr': v.get('ns4:PNR')
+                    'cprnr': v.get('ns5:PNR')
                 }
             )
         # NOTE: v is a list of dicts if k is 'ns4:barn'.
@@ -135,7 +134,7 @@ def parse_cpr_person_lookup_xml_to_dict(soap_response_xml):
                 citizen_dict['relationer'].append(
                     {
                         'relation': k[4:],
-                        'cprnr': child.get('ns4:PNR')
+                        'cprnr': child.get('ns5:PNR')
                     }
                 )
 
