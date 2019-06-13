@@ -123,21 +123,21 @@ def parse_cpr_person_lookup_xml_to_dict(soap_response_xml):
     citizen_dict['relationer'] = []
     for k, v in relations.items():
         # NOTE: v is a dict if k is:
-        # 'ns4:mor', 'ns4:far', or 'ns4:aegtefaelle'.
+        # 'ns5:mor', 'ns5:far', or 'ns5:aegtefaelle'.
         if isinstance(v, dict):
             citizen_dict['relationer'].append(
                 {
                     'relation': k[4:],
-                    'cprnr': v.get('ns5:PNR')
+                    'cprnr': v.get('ns5:personnummer')
                 }
             )
-        # NOTE: v is a list of dicts if k is 'ns4:barn'.
+        # NOTE: v is a list of dicts if k is 'ns5:barn'.
         if isinstance(v, list):
             for child in v:
                 citizen_dict['relationer'].append(
                     {
                         'relation': k[4:],
-                        'cprnr': child.get('ns5:PNR')
+                        'cprnr': child.get('ns5:personnummer')
                     }
                 )
 
