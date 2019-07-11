@@ -17,10 +17,15 @@ __author__ = "Heini Leander Ovason"
 
 
 # Service
-service_url = "https://prod.serviceplatformen.dk/service/CPR/PersonBaseDataExtended/4"
+prod_service_url = (
+    "https://prod.serviceplatformen.dk/service/CPR/PersonBaseDataExtended/4"
+)
+test_service_url = (
+    "https://exttest.serviceplatformen.dk/service/CPR/PersonBaseDataExtended/4"
+)
 
 
-def get_citizen(service_uuids, certificate, cprnr, service_url=service_url):
+def get_citizen(service_uuids, certificate, cprnr, production=False):
     """The function returnes a citizen dict from the
     'SF1520 - Udvidet person stamdata (lokal)' service.
     It serves as a facade to simplify input validation, and interaction
@@ -29,6 +34,11 @@ def get_citizen(service_uuids, certificate, cprnr, service_url=service_url):
     :type cpr: str
     :return: Dictionary representation of a citizen
     :rtype: dict"""
+
+    if production:
+        service_url = prod_service_url
+    else:
+        service_url = test_service_url
 
     is_cprnr_valid = validate_cprnr(cprnr)
 
@@ -98,11 +108,11 @@ def parse_cpr_person_lookup_xml_to_dict(soap_response_xml):
 
     citizen_dict = {}
 
-    name = root["persondata"]['navn']
+    name = root["persondata"]["navn"]
     for k, v in name.items():
         citizen_dict[k] = v
 
-    person_data = root['persondata']
+    person_data = root["persondata"]
     person_data.pop("navn")
     for k, v in person_data.items():
         citizen_dict[k] = v
