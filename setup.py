@@ -11,24 +11,25 @@ from setuptools import find_packages
 
 setup(
     name='service_person_stamdata_udvidet',
-    version='0.1.0',
+    version='0.1.3',
     description='',
-    author='Steffen Park',
-    author_email='steffen@magenta.dk',
+    author='Magenta ApS',
+    author_email='info@magenta.dk',
     license="MPL 2.0",
-    packages=find_packages(),
+    packages=find_packages(exclude=['tests']),
     package_data={
         '': ["*.txt", "*.xml"]
     },
     zip_safe=False,
     install_requires=[
-        "certifi==2018.1.18",
-        "chardet==3.0.4",
-        "idna==2.6",
-        "Jinja2==2.10",
-        "MarkupSafe==1.0",
-        "requests==2.18.4",
-        "urllib3==1.22",
-        "xmltodict==0.11.0",
-    ]
+        "Jinja2>=2.10",
+        "requests>=2.18.4",
+        "xmltodict>=0.11.0",
+    ],
+    classifiers=[
+        "Development Status :: 3 - Alpha",
+        "Topic :: Utilities",
+        "License :: OSI Approved :: MPL License",
+    ],
+    url="https://github.com/magenta-aps/service_person_stamdata_udvidet",
 )
