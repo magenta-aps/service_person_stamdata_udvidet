@@ -26,14 +26,43 @@ test_service_url = (
 
 
 def get_citizen(service_uuids, certificate, cprnr, production=True):
-    """The function returnes a citizen dict from the
+    """
+    The function returnes a citizen dict from the
     'SF1520 - Udvidet person stamdata (lokal)' service.
     It serves as a facade to simplify input validation, and interaction
     with the SOAP service, parsing and filtering the response.
-    :param cprnr:  String of 10 digits -> r'^\d{10}$'
-    :type cpr: str
+
+    :param dict service_uuids: The required service uuids
+
+    .. note::
+
+        Here is sample of the service_uuid dictionary:
+        
+            {
+                'service_agreement': '42571b5d-6371-4edb-8729-1343a3f4c9b9',
+                'user_system': '99478e20-68e6-41ff-b822-681fb69b8ff2',
+                'user': 'e3108916-8ed9-4482-8045-7b46c83904b0',
+                'service': '9883c483-d42f-424a-9a2a-94d1d200d294'
+            }
+
+    :param str certificate: Path to the required certificate bundle
+
+    :param str cprnr:  String of 10 digits -> r'^\d{10}$'
+    
+    :param bool production: Production/Test service mode toggle 
+
+    .. note::
+
+        Production and Test services are seperate systems hosted by
+        serviceplatformen.
+
+        Please note that it is NOT possible to use "real" cpr identifiers
+        on the test platform and vice versa.
+
+
     :return: Dictionary representation of a citizen
-    :rtype: dict"""
+    :rtype: dict
+    """
 
     if production:
         service_url = prod_service_url
