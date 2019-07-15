@@ -5,6 +5,30 @@ Module that integrates with the service_person_stamdata_udvidet service from Ser
 :Author:
     Heini Leander Ovason <heini@magenta.dk>
 
+
+Quick notes regarding use of the test and production service webapi
+===================================================================
+Please note that access to the service webapi depends on the level of service agreement in place. 
+
+The service agreement may only grant access to either the test or the production service. 
+(It may also be possible to have an agreement which grants access to both systems)
+
+**Thus access to the production service does not automatically
+constitue access to the test service.**
+
+The api exposes a toggle to access either the production or the test system (production by default):
+
+.. code-block:: python
+
+
+    get_citizen(..., production=<True|False>)
+
+
+Additionally it is also important to note that it is not possible
+to use "real" cpr identifiers on the test system and vice versa. 
+
+
+
 API (with examples)
 ===================
 
@@ -35,7 +59,8 @@ get_citizen()
     result = get_citizen(
         service_uuids=uuids,
         certificate=certificate,
-        cprnr=cprnr
+        cprnr=cprnr,
+        production=True  # Set this to `False` to access the test system
     )
 
     print(json.dumps(result))
