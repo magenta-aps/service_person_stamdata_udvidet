@@ -9,16 +9,18 @@
 from setuptools import setup
 from setuptools import find_packages
 
+__version__ = "0.2.0"
+
 setup(
-    name='service_person_stamdata_udvidet',
-    version='0.1.3',
-    description='',
-    author='Magenta ApS',
-    author_email='info@magenta.dk',
+    name="service_person_stamdata_udvidet",
+    version=__version__,
+    description="Integration module for serviceplatforment CPR service",
+    author="Magenta ApS",
+    author_email="info@magenta.dk",
     license="MPL 2.0",
-    packages=find_packages(exclude=['tests']),
+    packages=find_packages(exclude=["tests"]),
     package_data={
-        '': ["*.txt", "*.xml"]
+        "": ["*.txt", "*.xml"]
     },
     zip_safe=False,
     install_requires=[
