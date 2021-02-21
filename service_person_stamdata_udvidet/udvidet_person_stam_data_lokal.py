@@ -26,7 +26,7 @@ test_service_url = (
 
 
 def get_citizen(service_uuids, certificate, cprnr, production=True):
-    """
+    r"""
     The function returnes a citizen dict from the
     'SF1520 - Udvidet person stamdata (lokal)' service.
     It serves as a facade to simplify input validation, and interaction
