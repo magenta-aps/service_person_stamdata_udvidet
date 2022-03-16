@@ -130,8 +130,13 @@ def parse_cpr_person_lookup_xml_to_dict(soap_response_xml):
         "http://serviceplatformen.dk/xml/wsdl/soap11/CPR/PersonBaseDataExtended/4/": None,
         "http://schemas.xmlsoap.org/soap/envelope/": None,
     }
+    # Use non-default namespace separator due to https://github.com/libexpat/libexpat/pull/577
+    # until a new version of libexpat is stable.
     xml_to_dict = xmltodict.parse(
-        soap_response_xml, process_namespaces=True, namespaces=namespaces
+        soap_response_xml,
+        process_namespaces=True,
+        namespaces=namespaces,
+        namespace_separator="|",
     )
     root = xml_to_dict["Envelope"]["Body"]["PersonLookupResponse"]
 
