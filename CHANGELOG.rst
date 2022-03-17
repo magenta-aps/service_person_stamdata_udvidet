@@ -8,6 +8,12 @@ Please review the official docs for the service:
   https://www.serviceplatformen.dk/administration/serviceOverview/show?uuid=e6be2436-bf35-4df2-83fe-925142825dc2
 
 
+Version 0.2.2 (March 16 2022)
+---------------------
+
+* Use a "sane" namespace separator due to https://github.com/libexpat/libexpat/pull/577
+
+
 Version 0.2.1 (February 21 2021)
 ---------------------
 
