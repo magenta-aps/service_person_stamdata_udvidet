@@ -9,12 +9,12 @@
 from setuptools import setup
 from setuptools import find_packages
 
-__version__ = "0.2.2"
+__version__ = "1.0.0"
 
 setup(
     name="service_person_stamdata_udvidet",
     version=__version__,
-    description="Integration module for serviceplatforment CPR service",
+    description="PersonBaseExtendedService integration for the PersonBaseExtendedService webservice which is a part of SF1520 API (https://digitaliseringskataloget.dk/integration/sf1520)",
     author="Magenta ApS",
     author_email="info@magenta.dk",
     license="MPL 2.0",
@@ -24,12 +24,18 @@ setup(
     },
     zip_safe=False,
     install_requires=[
-        "Jinja2>=2.10",
-        "requests>=2.18.4",
-        "xmltodict>=0.11.0",
-    ],
+        "certifi==2022.12.7",
+        "chardet==3.0.4",
+        "charset-normalizer==3.0.1",
+        "idna==2.6",
+        "Jinja2==3.1.2",
+        "MarkupSafe==2.1.2",
+        "requests==2.28.2",
+        "urllib3==1.26.14",
+        "xmltodict==0.13.0",
+        ],
     classifiers=[
-        "Development Status :: 3 - Alpha",
+        "Development Status :: RC 1.0",
         "Topic :: Utilities",
         "License :: OSI Approved :: MPL License",
     ],

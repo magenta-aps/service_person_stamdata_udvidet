@@ -15,7 +15,7 @@ __author__ = "Heini Leander Ovason"
 
 
 def construct_envelope_SF1520(template, service_uuids, cprnr):
-    """The function returnes a envelope for the service
+    """The function returns an envelope for the service
     'SF1520 - Udvidet person stamdata (lokal)'."""
 
     with open(template, "r") as filestream:
@@ -44,7 +44,7 @@ def construct_envelope_SF6002(
     operation,
     parameter_type
 ):
-    """The function returnes a envelope for the service
+    """The function returns an envelope for the service
     'SF6002 - CPR Abonnement'."""
 
     with open(template, "r") as filestream:

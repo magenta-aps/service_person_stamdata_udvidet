@@ -1,6 +1,6 @@
 service_person_stamdata_udvidet
 *******************************
-Module that integrates with the service_person_stamdata_udvidet service from Serviceplatformen.
+Package that integrates with the SF1520 API's PersonBaseDataExtendedService at serviceplatformen.dk
 
 :Author:
     Heini Leander Ovason <heini@magenta.dk>
@@ -32,11 +32,11 @@ to use "real" cpr identifiers on the test system and vice versa.
 API (with examples)
 ===================
 
-*In order for this module to interact with Serviceplatformen you need valid 'Invocation context' UUIDs and a certificate.*
+*In order for this package to interact with Serviceplatformen you need valid 'Invocation context' UUIDs and a certificate.*
 
 get_citizen()
 -------------
-*The function serves as a facade to ease interaction with Serviceplatformen's 'SF1520 - Udvidet person stamdata (lokal)' service.*
+*The function serves as a facade to ease interaction with the SF1520 API's PersonBaseDataExtendedService at serviceplatformen.dk*
 
 .. code-block:: python
 
@@ -60,7 +60,8 @@ get_citizen()
         service_uuids=uuids,
         certificate=certificate,
         cprnr=cprnr,
-        production=True  # Set this to `False` to access the test system
+        production=True,  # By default set to `False` in get_citizen(). Specify `True` target production environment.
+        api_version=<int> # Type: Integer. Options: 4 or 5
     )
 
     print(json.dumps(result))
