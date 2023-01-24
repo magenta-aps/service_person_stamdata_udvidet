@@ -16,16 +16,7 @@ from .helpers import construct_envelope_SF1520
 __author__ = "Heini Leander Ovason"
 
 
-# Service
-prod_service_url = (
-    "https://prod.serviceplatformen.dk/service/CPR/PersonBaseDataExtended/4"
-)
-test_service_url = (
-    "https://exttest.serviceplatformen.dk/service/CPR/PersonBaseDataExtended/4"
-)
-
-
-def get_citizen(service_uuids, certificate, cprnr, production=True):
+def get_citizen(service_uuids, certificate, cprnr, production=False, **kwargs):
     r"""
     The function returnes a citizen dict from the
     'SF1520 - Udvidet person stamdata (lokal)' service.
@@ -63,24 +54,33 @@ def get_citizen(service_uuids, certificate, cprnr, production=True):
     :return: Dictionary representation of a citizen
     :rtype: dict
     """
+    
+    api_version = kwargs.get("api_version")
+    if api_version:
+        if api_version == 4 or api_version == 5:
+            api_version = str(api_version)
+        else:
+            err_msg = "'{0}' is not a valid api version. If not perhaps input type was a str and not int(?)".format(api_version)
+            raise ValueError(err_msg)
 
+    service_url = "https://exttest.serviceplatformen.dk/service/CPR/PersonBaseDataExtended/{0}".format(api_version)
     if production:
-        service_url = prod_service_url
-    else:
-        service_url = test_service_url
+        service_url = "https://prod.serviceplatformen.dk/service/CPR/PersonBaseDataExtended/{0}".format(api_version)
 
     is_cprnr_valid = validate_cprnr(cprnr)
-
     if is_cprnr_valid:
 
         template_directory = os.path.dirname(__file__)
+        soap_envelope = "PersonBaseDataExtended_v{0}_envelope.xml".format(api_version)
 
         soap_envelope_template = os.path.join(
-            template_directory, "soap_envelope_template.xml"
+            template_directory, soap_envelope
         )
 
         soap_envelope = construct_envelope_SF1520(
-            template=soap_envelope_template, service_uuids=service_uuids, cprnr=cprnr
+            template=soap_envelope_template,
+            service_uuids=service_uuids,
+            cprnr=cprnr
         )
         response = call_cpr_person_lookup_request(
             soap_envelope=soap_envelope,
@@ -89,7 +89,8 @@ def get_citizen(service_uuids, certificate, cprnr, production=True):
         )
         if response.status_code == 200:
             citizen_dict = parse_cpr_person_lookup_xml_to_dict(
-                soap_response_xml=response.text
+                soap_response_xml=response.text,
+                api_version=api_version
             )
             return citizen_dict
         else:
@@ -115,7 +116,7 @@ def call_cpr_person_lookup_request(soap_envelope, certificate, service_url):
     return response
 
 
-def parse_cpr_person_lookup_xml_to_dict(soap_response_xml):
+def parse_cpr_person_lookup_xml_to_dict(soap_response_xml, api_version):
     """Parses string xml to a dict
     : param soap_response_xml: xml
     : type soap_response_xml: str
@@ -127,9 +128,13 @@ def parse_cpr_person_lookup_xml_to_dict(soap_response_xml):
         "http://serviceplatformen.dk/xml/schemas/InvocationContext/1/": None,
         "http://serviceplatformen.dk/xml/schemas/AuthorityContext/1/": None,
         "http://serviceplatformen.dk/xml/schemas/CallContext/1/": None,
-        "http://serviceplatformen.dk/xml/wsdl/soap11/CPR/PersonBaseDataExtended/4/": None,
+        "http://serviceplatformen.dk/xml/wsdl/soap11/CPR/PersonBaseDataExtended/{0}/".format(api_version): None,
         "http://schemas.xmlsoap.org/soap/envelope/": None,
     }
+    
+    if api_version == "5": # Add additional namespace
+        namespaces["http://serviceplatformen.dk/xml/schemas/ServiceplatformFault/1/"]: None
+
     # Use non-default namespace separator due to https://github.com/libexpat/libexpat/pull/577
     # until a new version of libexpat is stable.
     xml_to_dict = xmltodict.parse(
