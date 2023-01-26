@@ -27,7 +27,7 @@ setup(
         "certifi==2022.12.7",
         "chardet==3.0.4",
         "charset-normalizer==2.1.1",
-        "idna==2.6",
+        "idna==3.4",
         "Jinja2==3.1.2",
         "MarkupSafe==2.1.2",
         "requests==2.28.2",
