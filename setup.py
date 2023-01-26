@@ -9,7 +9,7 @@
 from setuptools import setup
 from setuptools import find_packages
 
-__version__ = "1.0.0"
+__version__ = "1.0.2"
 
 setup(
     name="service_person_stamdata_udvidet",
