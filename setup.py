@@ -30,7 +30,7 @@ setup(
         "idna==3.4",
         "Jinja2==3.1.2",
         "MarkupSafe==2.1.2",
-        "requests==2.28.2",
+        "requests==2.31.0",
         "urllib3==1.26.14",
         "xmltodict==0.13.0",
         ],
