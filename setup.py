@@ -24,7 +24,7 @@ setup(
     },
     zip_safe=False,
     install_requires=[
-        "certifi==2022.12.7",
+        "certifi==2023.7.22",
         "chardet==3.0.4",
         "charset-normalizer==2.1.1",
         "idna==3.4",
