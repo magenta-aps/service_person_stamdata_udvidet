@@ -35,9 +35,9 @@ setup(
         "xmltodict==0.13.0",
         ],
     classifiers=[
-        "Development Status :: RC 1.0",
+        "Development Status :: 5 - Production/Stable",
         "Topic :: Utilities",
-        "License :: OSI Approved :: MPL License",
+        "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
     ],
     url="https://github.com/magenta-aps/service_person_stamdata_udvidet",
 )
